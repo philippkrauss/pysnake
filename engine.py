@@ -1,12 +1,15 @@
 import pygame
+
 pygame.init()
 
 BLACK = [0, 0, 0]
 WHITE = [255, 255, 255]
+WIDTH = 84
+HEIGHT = 48
+FACTOR = 10
 
 # Set the height and width of the screen
-SIZE = [400, 400]
-
+SIZE = [WIDTH * FACTOR, HEIGHT * FACTOR]
 
 
 class PygameEngine:
@@ -16,7 +19,6 @@ class PygameEngine:
         pygame.display.set_caption("Snow Animation")
         self.clock = pygame.time.Clock()
         return
-
 
     def mainLoop(self):
         running = True
@@ -36,7 +38,12 @@ class PygameEngine:
     def circle(self, rectangle):
         pygame.draw.circle(self.screen, WHITE, rectangle, 2)
 
+    def rect(self, rectangle):
+        pygame.draw.rect(self.screen, WHITE, rectangle)
 
-
-
-
+    def render(self, matrix):
+        for rowIndex in range(len(matrix)):
+            for colIndex in range(len(matrix[rowIndex])):
+                pixel = matrix[rowIndex][colIndex]
+                if pixel == 1:
+                    pygame.draw.rect(self.screen, WHITE, (colIndex * FACTOR, rowIndex * FACTOR, FACTOR, FACTOR))
