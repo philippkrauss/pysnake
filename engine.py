@@ -1,4 +1,5 @@
 import pygame
+from enum import Enum
 
 pygame.init()
 
@@ -23,16 +24,19 @@ class PygameEngine:
     def mainLoop(self):
         running = True
         while running:
+            key = None
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
+                if event.type == pygame.KEYDOWN:
+                    key = event.key
             self.screen.fill(BLACK)
-            self.logic()
+            self.logic(self.getKey(key))
             pygame.display.flip()
             self.clock.tick(20)
         pygame.quit()
 
-    def logic(self):
+    def logic(self, key):
         return
 
     def circle(self, rectangle):
@@ -47,3 +51,19 @@ class PygameEngine:
                 pixel = matrix[rowIndex][colIndex]
                 if pixel == 1:
                     pygame.draw.rect(self.screen, WHITE, (colIndex * FACTOR, rowIndex * FACTOR, FACTOR, FACTOR))
+
+    def getKey(self, key):
+        if key == 276:
+            return Key.LEFT
+        if key == 275:
+            return Key.RIGHT
+        if key == 273:
+            return Key.UP
+        if key == 274:
+            return Key.DOWN
+
+class Key(Enum):
+    UP = 0
+    DOWN = 1
+    LEFT = 2
+    RIGHT = 3
