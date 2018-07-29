@@ -12,17 +12,41 @@ class SnakeGame(PygameEngine):
         self.gamefield = GameField(84, 48)
         self.snake = Snake()
         self.direction = Direction.RIGHT
+        self.running = True
 
     def logic(self, key):
-        self.calculateDirection(key)
+        if self.running is not True:
+            self.gameOver(key)
+        else:
+            self.game(key)
 
+    def game(self, key):
+        self.calculateDirection(key)
         self.index += 1
         if ((self.index % 10) == 0):
             self.snake.grow()
-        self.gamefield.clear()
         self.snake.move(self.direction)
-        self.snake.render(self.gamefield)
-        self.render(self.gamefield.matrix)
+
+        if self.collision():
+            self.running = False
+        else:
+            self.gamefield.clear()
+            self.snake.render(self.gamefield)
+            self.render(self.gamefield.matrix)
+
+    def collision(self):
+        snakeHead = self.snake.getHead()
+        if snakeHead[0] < 0:
+            return True
+        if snakeHead[0] >= self.gamefield.height:
+            return True
+        if snakeHead[1] < 0:
+            return True
+        if snakeHead[1] >= self.gamefield.width:
+            return True
+        return False
+
+
 
     def calculateDirection(self, key):
         if key == Key.LEFT:
@@ -34,6 +58,8 @@ class SnakeGame(PygameEngine):
         if key == Key.DOWN:
             self.direction = Direction.DOWN
 
+    def gameOver(self, key):
+        self.render(self.gamefield.matrix)
 
 gameEngine = SnakeGame()
 gameEngine.mainLoop()
